@@ -1,0 +1,29 @@
+.header > div {
+    height: 60vh;
+}
+
+.header p {
+    font-size: 4em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.header img {
+    z-index: 0;
+}
+
+.header * {
+    z-index: 1;
+}
+
+.product {
+    background-color: white;
+    transition: 0.2s;
+}
+
+.product:hover {
+    background-color: rgb(240, 240, 240);
+}
+
+.product-page-quantity {
+    width: 10%;
+}

@@ -1,5 +1,8 @@
-import 'bootstrap/dist/css/bootstrap.css'
+import { Navigationbar } from '@/app/components/Navigationbar'
+import { PageFooter } from '@/app/components/Footer';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './globals.css'
 
 export const metadata = {
   title: 'Silkroad Apparel',
@@ -7,10 +10,13 @@ export const metadata = {
 }
 
 function RootLayout({ children }) {
-
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Navigationbar/>
+          {children}
+        <PageFooter/>
+      </body>
     </html>
   )
 }

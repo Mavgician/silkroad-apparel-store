@@ -22,7 +22,7 @@ function Page() {
         -Mavs ang leader ng bayan
       */
       }
-      <h1>You have reached the template page!</h1>
+      <h1>men</h1>
     </main>
   )
 }
