@@ -1,4 +1,4 @@
-import { db } from '@/app/scripts/firebase.js'
+import { auth, db } from '@/app/scripts/firebase.js'
 import {
   collection,
   setDoc,
@@ -67,12 +67,12 @@ async function getDocumentFromRef(ref) {
   return await getDoc(ref)
 }
 
-async function getRefFromId(collectionRef, id) {
-  return await doc(collection(db, collectionRef), String(id))
+function getRefFromId(collectionRef, id) {
+  return doc(collection(db, collectionRef), String(id))
 }
 
-async function getCurrentUser() {
-  
+function getCurrentUser() {
+  return auth.currentUser
 }
 
 async function editDocument(collectionRef, data, id) {

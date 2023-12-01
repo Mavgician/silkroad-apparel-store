@@ -1,22 +1,24 @@
+'use client'
+
 import { Navigationbar } from '@/app/components/Navigationbar'
 import { PageFooter } from '@/app/components/Footer';
+
+import { usePathname } from 'next/navigation';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/app/globals.css'
 
-export const metadata = {
-  title: 'Silkroad Apparel',
-  description: 'A mock apparel store developed for Web System and Technologies',
-}
 
 function RootLayout({ children }) {
+  let path = usePathname()
+
   return (
     <html lang="en">
       <body>
-        <Navigationbar/>
+        {path == '/login' ? null : <Navigationbar/>}
           {children}
-        <PageFooter/>
+        {path == '/login' ? null : <PageFooter/>}
       </body>
     </html>
   )

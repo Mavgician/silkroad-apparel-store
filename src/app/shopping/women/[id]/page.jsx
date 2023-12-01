@@ -7,7 +7,8 @@ import {
   ProductGallery,
   ProductCardCollection,
   ProductCard,
-  ProductDescription
+  ProductDescription,
+  ProductControls
 } from '@/app/components/Product'
 
 import { getDocument, getCollectionFiltered } from '@/app/scripts/database-functions'
@@ -60,6 +61,9 @@ async function Page({ params }) {
                 <span className='fw-bold'>Shipping Fee: </span>
                 {data.extra_details.shipping_fee === 0 ? 'Free' : data.extra_details.shipping_fee}
               </p>
+            </div>
+            <div className='d-flex mt-5'>
+              {data.extra_details.available ? <ProductControls id={data.id}/> : <h1 className='text-danger'>Not Available</h1>}
             </div>
           </ProductBody>
         </div>

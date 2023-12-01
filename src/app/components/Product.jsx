@@ -27,6 +27,13 @@ import { useScreenSize } from '@/app/scripts/custom-hooks'
 import InnerImageZoom from 'react-inner-image-zoom';
 import ReadMoreReact from 'read-more-react'
 
+import { getCurrentUser, getDocument, getRefFromId } from '../scripts/database-functions'
+
+import { useRouter } from 'next/navigation'
+import { Sign_Out } from '@/app/scripts/Auth'
+import { collection, doc, setDoc } from 'firebase/firestore'
+import { db } from '../scripts/firebase'
+
 /* Product Listing Layouts */
 
 function ProductCardCategoryCollection({ children, className }) {
@@ -257,43 +264,71 @@ function ProductHeader({ children }) {
   )
 }
 
-function ProductBody({ children, available }) {
-
-  const controls = () => <>
-    <Input type="select" className={`${styles['product-page-quantity']} me-2`}>
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      <option>5</option>
-      <option>6</option>
-      <option>7</option>
-      <option>8</option>
-      <option>9</option>
-      <option>10</option>
-    </Input>
-    <button
-      type="button"
-      className="btn btn-primary btn-circle btn-lg btn-circle me-2"
-    >
-      Add to cart <FontAwesomeIcon icon={faCartShopping} />
-    </button>
-    <button
-      type="button"
-      className="btn btn-danger btn-circle btn-lg btn-circle me-2"
-    >
-      Buy Now
-    </button>
-  </>
-
+function ProductBody({ children }) {
   return (
     <>
       <div>
         {children}
       </div>
-      <div className='d-flex mt-5'>
-        {available ? controls() : <h1 className='text-danger'>Not Available</h1>}
-      </div>
+    </>
+  )
+}
+
+function ProductControls({ id }) {
+  const router = useRouter()
+  const user = getCurrentUser()
+  const ref = getRefFromId('product-test', id)
+
+  async function addToCart() {
+    if (!user) return router.push('/login')
+
+    let data = await getDocument('user-test', user.uid)
+    let cart = []
+
+    if (data.cart === undefined) {
+      data.cart = cart
+    } else {
+      cart = data.cart
+    }
+
+    data.cart.push(ref)
+
+    setDoc(doc(collection(db, 'user-test'), user.uid), data)
+  }
+
+  function buy() {
+    if (!user) return router.push('/login')
+    
+  }
+
+  return (
+    <>
+      <Input type="select" className={`${styles['product-page-quantity']} me-2`}>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+      </Input>
+      <button
+        type="button"
+        className="btn btn-primary btn-circle btn-lg btn-circle me-2"
+        onClick={addToCart}
+      >
+        Add to cart <FontAwesomeIcon icon={faCartShopping} />
+      </button>
+      <button
+        type="button"
+        className="btn btn-danger btn-circle btn-lg btn-circle me-2"
+        onClick={buy}
+      >
+        Buy Now
+      </button>
     </>
   )
 }
@@ -398,6 +433,7 @@ export {
   ProductContainer,
   ProductHeader,
   ProductBody,
+  ProductControls,
   ProductRating,
   ProductPrice,
   ProductDescription,

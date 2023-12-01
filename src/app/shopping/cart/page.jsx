@@ -29,7 +29,7 @@ async function Page() {
         <Row>
           <Col md={9} sm={12}>
             <h1>Shopping Cart</h1>
-            {[cart_cards]}
+            {/* {[cart_cards]} */}
           </Col>
           <Col md={3} sm={12} className='position-relative'>
             <div>
