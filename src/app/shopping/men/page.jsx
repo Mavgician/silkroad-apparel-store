@@ -12,7 +12,7 @@ import {
 import { getCollection, getCollectionFiltered } from "@/app/scripts/database-functions"
 
 async function Page() {
-  let data = await getCollectionFiltered('product-test', 'Men', 8, "group");
+  let data = await getCollectionFiltered('product-test', 'Men', 20, "group");
   let cards = []
 
   try {

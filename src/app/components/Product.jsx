@@ -155,7 +155,7 @@ function ProductComingSoonContainer({ children }) {
 
 /* Product Card Components */
 
-function ProductCard({ data, fromProductPage}) {
+function ProductCard({ data, fromProductPage }) {
   let currentPath = usePathname()
 
   if (fromProductPage) {
@@ -164,22 +164,23 @@ function ProductCard({ data, fromProductPage}) {
     currentPath = newPath.join('/')
   }
 
-
   return (
     <div className={`p-1 mb-2 ${styles.product}`}>
       <a href={`${currentPath}/${data.id}`} className='text-decoration-none text-black'>
         <div className="position-relative overflow-hidden d-flex justify-content-center align-items-center" style={{ maxHeight: 300, height: 300 }}>
           <img src={data.images[0]} className="w-100" />
         </div>
-        <div>
+        <div className='position-relative' style={{ height: 125 }}>
           <div className="mt-3">
             <ProductRating rating={data.rating} popularity={data.rating_count} />
           </div>
           <p className="mt-1 mb-2 text-muted fw-bold">{data.product_name}</p>
-          {data.oldPrice === 0 ? null : <small className='strike-through fw-bold fs-7 m-0 lh-1'>PHP {data.old_price}</small>}
-          <p className='text-danger fw-bold fs-4 m-0 lh-1'>
-            PHP {data.new_price}&nbsp;
-          </p>
+          <div className='w-100 position-absolute bottom-0'>
+            {data.old_price === 0 ? null : <small className='strike-through fw-bold fs-7 m-0 lh-1'>PHP {data.old_price}</small>}
+            <p className='text-danger fw-bold fs-4 m-0 lh-1'>
+              PHP {data.new_price}&nbsp;
+            </p>
+          </div>
         </div>
       </a>
     </div>

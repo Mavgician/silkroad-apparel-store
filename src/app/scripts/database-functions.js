@@ -17,7 +17,7 @@ import {
 } from 'firebase/firestore'
 
 async function getCollection(collectionRef) {
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  /* await new Promise(resolve => setTimeout(resolve, 1000)) */
 
   const querySnap = await getDocs(query(collection(db, collectionRef), orderBy('id')))
   let data = []
@@ -30,7 +30,7 @@ async function getCollection(collectionRef) {
 }
 
 async function getCollectionFiltered(collectionRef, filter, search_limit = 5, type = 'type') {
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  /* await new Promise(resolve => setTimeout(resolve, 1000)) */
 
   const querySnap = await getDocs(
     query(
@@ -55,7 +55,7 @@ async function getCollectionFiltered(collectionRef, filter, search_limit = 5, ty
 }
 
 async function getDocument(collectionRef, id) {
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  /* await new Promise(resolve => setTimeout(resolve, 1000)) */
 
   let document = await getDoc(doc(collection(db, collectionRef), id));
   let data = document.data();

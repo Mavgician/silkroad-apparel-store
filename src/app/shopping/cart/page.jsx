@@ -13,16 +13,13 @@ import { CartItem } from '@/app/components/Cart.jsx'
 async function Page() {
   let user_data = await getDocument('user-test', 'lMfw8uvoq8qR9XaWTKat')
 
-  let cart_detail = []
   let cart_cards = []
 
   for (let i = 0; i < user_data.cart.length; i++) {
-    cart_detail.push((await getDocumentFromRef(user_data.cart[i])).data())
-  }
+    let details = (await getDocumentFromRef(user_data.cart[i])).data()
 
-  for (let i = 0; i < cart_detail.length; i++) {
     cart_cards.push(
-      <CartItem data={cart_detail[i]} itemIndex={i} user_id={'lMfw8uvoq8qR9XaWTKat'} />
+      <CartItem data={details} itemIndex={i} user_id={user_data.id} />
     )
   }
 

@@ -203,8 +203,8 @@ function ProductModal(
   }, [isOpen]);
 
   useEffect(() => {
-    setImageFiles(filesContent)
-  });
+    setImageFiles(filesContent.map((data) => data.content))
+  }, [loading]);
 
   async function uploadFile(name, content) {
     let snapshot = await uploadString(ref(ref(storage, id), name), content, 'data_url')
@@ -216,8 +216,12 @@ function ProductModal(
     let download_urls = []
 
     for (let i = 0; i < imageFiles.length; i++) {
-      let snapshot = await uploadFile(imageFiles[i].name, imageFiles[i].content)
-      download_urls.push(await getDownloadURL(snapshot.ref))
+      if (typeof imageFiles[i] === 'object') {
+        let snapshot = await uploadFile(imageFiles[i].name, imageFiles[i].content)
+        download_urls.push(await getDownloadURL(snapshot.ref))
+      } else {
+        download_urls = imageFiles
+      }
     }
 
     let submit_data = {
@@ -502,8 +506,9 @@ function ProductModal(
                 </div>
               </div>
               <Row className='pt-3'>
-                {loading ? <p>Loading the image/s...</p> : imageFiles.map(data => <Col md={6} lg={3} xl={2}><img width={'100%'} src={data.content} /></Col>)}
+                {loading ? <p>Loading the image/s...</p> : imageFiles.map(data => <Col md={6} lg={3} xl={2}><img width={'100%'} src={data} /></Col>)}
                 {errors.length ? <p>Error!</p> : null}
+                {console.log(imageFiles)}
               </Row>
             </Form>
           </CardHeader>
