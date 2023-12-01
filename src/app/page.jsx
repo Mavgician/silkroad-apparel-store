@@ -7,21 +7,29 @@ import {
   CarouselControl
 } from 'reactstrap';
 
+
+import logo from '@/lib/silk-road-500.png'
+
 const items = [
   {
-    src: 'https://picsum.photos/id/123/2000',
+    src: 'https://im.uniqlo.com/global-cms/spa/res6fbe5fffc0b26ce61c11878b9122d256fr.jpg',
     altText: 'Slide 1',
     key: 1,
   },
   {
-    src: 'https://picsum.photos/id/456/2000',
+    src: 'https://im.uniqlo.com/global-cms/spa/resb328f77a75398ec856c8a00b6add8078fr.jpg',
     altText: 'Slide 2',
     key: 2,
   },
   {
-    src: 'https://picsum.photos/id/678/2000',
+    src: 'https://im.uniqlo.com/global-cms/spa/res78be7a82ac12a0de3b629170e3c98848fr.jpg',
     altText: 'Slide 3',
     key: 3,
+  },
+  {
+    src: 'https://im.uniqlo.com/global-cms/spa/res5408f5fd7d1bccc83d23e76875f98b9cfr.jpg',
+    altText: 'Slide 4',
+    key: 4,
   },
 ];
 
@@ -49,18 +57,19 @@ function Home() {
         key={item.src}
         className='vh-100 overflow-hidden'
       >
-        <img src={item.src} alt={item.altText}/>
+        <img src={item.src} alt={item.altText} className='h-100'/>
       </CarouselItem>
     );
   });
 
   return (
-    <main className='pt-0'>
+    <main className='pt-0 position-relative'>
       <Carousel
         activeIndex={activeIndex}
         next={next}
         previous={previous}
         interval={false}
+        className='home-background'
       >
         {slides}
         <CarouselControl
@@ -74,6 +83,13 @@ function Home() {
           onClickHandler={next}
         />
       </Carousel>
+      <div className='position-absolute h-50 w-50 top-50 start-50 home-screen'>
+        <img src={logo.src} alt="" />
+        <div>
+          <h1>Silkroad</h1>
+          <h2>The place for all your clothing needs.</h2>
+        </div>
+      </div>
     </main>
   )
 }

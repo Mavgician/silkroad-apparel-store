@@ -1,28 +1,78 @@
-'use client'
+import {
+  ProductContainer,
+  ProductHeader,
+  ProductBody,
+  ProductRating,
+  ProductPrice,
+  ProductGallery,
+  ProductCardCollection,
+  ProductCard,
+  ProductDescription
+} from '@/app/components/Product'
 
-function Page() {
+import { getDocument, getCollectionFiltered } from '@/app/scripts/database-functions'
+
+async function Page({ params }) {
+  let data = await getDocument('product-test', params.id);
+  let suggested_data = await getCollectionFiltered('product-test', data.extra_details.category.type);
+
+  let cards = []
+
+  try {
+    suggested_data.map(data => {
+      if (data.id != params.id) cards.push(<ProductCard data={data} fromProductPage={true}/>)
+    })
+  }
+  catch (error) {
+    if (data.id != params.id) cards = <ProductCard data={suggested_data[0]} fromProductPage={true}/>
+  }
+
   return (
     <main>
+      <ProductContainer>
+        <div>
+          <ProductGallery images={data.images}/>
+        </div>
+        <div>
+          <ProductHeader>
+            <h1>{data.product_name}</h1>
+            <ProductRating rating={data.rating} popularity={data.rating_count} />
+            <ProductPrice oldPrice={data.old_price} newPrice={data.new_price} />
+          </ProductHeader>
+          <ProductBody available={data.extra_details.available}>
+            <ProductDescription>{data.description}</ProductDescription>
+            <div className='text-muted'>
+              <p className='m-0'>
+                <span className='fw-bold'>Availability: </span>
+                {data.extra_details.available ? 'In Stock' : 'n/a'}
+              </p>
+              <p className='m-0'>
+                <span className='fw-bold'>Category: </span>
+                <span className='text-uppercase'>
+                  {data.extra_details.category.type} - {data.extra_details.category.group}
+                </span>
+              </p>
+              <p className='m-0'>
+                <span className='fw-bold'>Shipping Area: </span>
+                {data.extra_details.shipping_area.length === 0 ? 'n/a' : data.extra_details.shipping_area}
+              </p>
+              <p className='m-0'>
+                <span className='fw-bold'>Shipping Fee: </span>
+                {data.extra_details.shipping_fee === 0 ? 'Free' : data.extra_details.shipping_fee}
+              </p>
+            </div>
+          </ProductBody>
+        </div>
+      </ProductContainer>
       {
-      /*
-        Lagay niyo dito pinaka layout ng home page for the store. Naka integrate ung bootstrap dito so all goods tayo dun.
-        Ang hindi lang nakaintegrate sa root component is ung javascript ng bootstrap. So kung mag ca1ousel or something,
-        sabihan niyo ko, kasi medj mahirap iexplain kung paano i allow un - 
-
-        Small explanation:
-          Next.js is mostly server-side rendered, ang pag import ng javascript is not "server" friendly. Need nating i-convert
-          yung component into a client component para maimport ung javascript. This is actually better para forced tayo gumawa
-          ng components for various things on a page. Slideshow component na lalagyan lang ng picture array etc. etc.
-        
-        Watch niyo rin ung sinend ko sa GC natin para mafamiliarize kayo sa framework. I suggest video number 3 para magets niyo
-        ung routing ng pages. Kung paano siya nahahandle ng server ni next.js.
-
-        PAMPADALI TO NG BUHAY NATIN OKAY >:(
-
-        -Mavs ang leader ng bayan
-      */
+        cards.length ?
+        <div className='my-5'>
+          <h1 className='text-center mb-5'>Similar Products</h1>
+          <ProductCardCollection>
+            {[cards]}
+          </ProductCardCollection>
+        </div> : null
       }
-      <h1>men product page</h1>
     </main>
   )
 }

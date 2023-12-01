@@ -1,8 +1,9 @@
 import { Navigationbar } from '@/app/components/Navigationbar'
 import { PageFooter } from '@/app/components/Footer';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './globals.css'
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '@/app/globals.css'
 
 export const metadata = {
   title: 'Silkroad Apparel',

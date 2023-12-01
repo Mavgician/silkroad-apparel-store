@@ -1,7 +1,7 @@
 function Loading() {
     return (
-        <main>
-            <h1>test</h1>
+        <main className="d-flex justify-content-center align-items-center">
+            <h1>Getting stuff done...</h1>
         </main>
     )
 }

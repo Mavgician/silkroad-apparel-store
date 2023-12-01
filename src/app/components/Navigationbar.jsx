@@ -42,16 +42,10 @@ function Navigationbar() {
             <NavItem>
               <NavLink href='/shopping/kids'>Kids</NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink href='#'>Help & Support</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href='#'>About</NavLink>
-            </NavItem>
           </Nav>
           <Nav className='ms-auto' navbar>
             <NavItem className='mx-3'>
-              <NavLink href='#'>
+              <NavLink href='/shopping/cart'>
                 <FontAwesomeIcon icon={faCartShopping} className='fa-lg' />
               </NavLink>
             </NavItem>

@@ -13,7 +13,7 @@ import {
   startAfter,
   getCountFromServer,
   getDoc,
-  startAt 
+  startAt
 } from 'firebase/firestore'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -424,8 +424,6 @@ function Page() {
   async function getPreviousUsers() {
     const querySnap = await getDocs(query(collectionRef, orderBy('id'), startAt(firstVisibleDoc), limit(10)))
     let data = []
-
-    console.log(firstVisibleDoc.data());
 
     querySnap.docs.forEach(
       (doc, idx, arr) => {
