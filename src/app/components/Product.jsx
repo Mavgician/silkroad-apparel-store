@@ -30,9 +30,9 @@ import ReadMoreReact from 'read-more-react'
 import { getCurrentUser, getDocument, getRefFromId } from '../scripts/database-functions'
 
 import { useRouter } from 'next/navigation'
-import { Sign_Out } from '@/app/scripts/Auth'
 import { collection, doc, setDoc } from 'firebase/firestore'
-import { db } from '../scripts/firebase'
+import { auth, db } from '@/app/scripts/firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 /* Product Listing Layouts */
 
@@ -275,31 +275,26 @@ function ProductBody({ children }) {
 }
 
 function ProductControls({ id }) {
-  const router = useRouter()
+  const [user, loading, error] = useAuthState(auth);
+
   const ref = getRefFromId('product-test', id)
-
+  const router = useRouter()
+  
   async function addToCart() {
-    if (!getCurrentUser()) return router.push('/login')
+    if (!user) return router.push('/login')
+    
+    let data = await getDocument('user-test', user.uid)
 
-    let data = await getDocument('user-test', getCurrentUser().uid)
-    let cart = []
-
-    console.log(data)
-
-    if (data.cart === undefined) {
-      data.cart = cart
-    } else {
-      cart = data.cart
+    if (data.cart === undefined) {data.cart = []}
+    if (!data.cart.some(e => e.id === ref.id)) {
+      data.cart.push(ref)
+      setDoc(doc(collection(db, 'user-test'), user.uid), data)
     }
-
-    data.cart.push(ref)
-
-    setDoc(doc(collection(db, 'user-test'), getCurrentUser().uid), data)
   }
 
   function buy() {
-    if (!getCurrentUser()) return router.push('/login')
-    
+    if (!user) return router.push('/login')
+    Sign_Out()
   }
 
   return (

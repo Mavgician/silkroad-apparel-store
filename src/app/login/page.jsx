@@ -18,15 +18,15 @@ import {
   Col,
 } from 'reactstrap';
 
-import { FacebookSign_in, GoogleSign_in } from "@/app/scripts/Auth";
-
 import { useRouter } from "next/navigation";
+
 
 import logo from '@/app/favicon.ico'
 import styles from '@/app/login.module.css'
 
 function Login() {
   const router = useRouter()
+  
 
   async function GoogleAuth() {
     await GoogleSign_in();

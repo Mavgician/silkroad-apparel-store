@@ -56,11 +56,9 @@ async function getCollectionFiltered(collectionRef, filter, search_limit = 5, ty
 
 async function getDocument(collectionRef, id) {
   /* await new Promise(resolve => setTimeout(resolve, 1000)) */
-
   let snapshot = await getDoc(doc(collection(db, collectionRef), id));
-  let data = snapshot.data();
 
-  return data
+  return snapshot.data()
 }
 
 async function getDocumentFromRef(ref) {

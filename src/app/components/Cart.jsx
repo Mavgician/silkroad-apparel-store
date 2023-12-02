@@ -1,28 +1,34 @@
 'use client'
 
+import { useState } from 'react'
 import {
-  Container,
   Card,
-  CardHeader,
   CardBody,
   Row,
   Col,
   FormGroup,
   Input
 } from 'reactstrap'
-import { deleteDocument, editDocument, getDocument, getRefFromId } from '../scripts/database-functions'
 
-function CartItem({ data, itemIndex, user_id, deleteCallback }) {
+function CartItem({ data, itemIndex, user_id, deleteCallback, checkCallback }) {
+  const [openModal, setModal] = deleteCallback
+
+  const [checkbox, setCheckbox] = useState(false);
+
+  function handleCheckbox(e) {
+    setCheckbox(e.target.checked)
+
+    if(e.target.checked) checkCallback(itemIndex, true)
+    else checkCallback(itemIndex, false)
+  }
+
   return (
     <Card className='mb-3'>
-      <CardHeader className='fw-bold text-muted'>
-        <big>Item No. {itemIndex + 1}</big>
-      </CardHeader>
       <CardBody>
         <Row>
           <Col md={1} sm={12} className='d-flex align-items-center'>
             <FormGroup check>
-              <Input type="checkbox" />
+              <Input type="checkbox" onChange={handleCheckbox} checked={checkbox}/>
             </FormGroup>
           </Col>
           <Col md={2} sm={12} className='d-flex align-items-center'>
@@ -60,14 +66,16 @@ function CartItem({ data, itemIndex, user_id, deleteCallback }) {
               <button
                 type="button"
                 className="btn btn-danger btn-sm my-1 w-100"
-                onClick={async () => {
-                  let user_data = await getDocument('user-test', user_id)
-                  let user_cart_copy = user_data.cart
-
-                  user_cart_copy.splice(itemIndex, 1)
-                  user_data.cart = user_cart_copy
-
-                  editDocument('user-test', user_data, user_id)
+                onClick={() => {
+                  setModal(
+                    {
+                      id: user_id,
+                      index: itemIndex,
+                      name: data.product_name
+                    }
+                  )
+                  openModal(true)
+                  console.log(deleteCallback);
                 }}
               >
                 Delete
