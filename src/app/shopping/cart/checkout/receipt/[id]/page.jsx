@@ -10,9 +10,9 @@ import {
 
 function Orders({data}) {
   return (
-    <>
+    <Row className='mb-3'>
       <Col md={3} sm={12}>
-        <img src={data.images[0]} alt="" />
+        <img src={data.images[0]} alt="" className='w-100'/>
       </Col>
       <Col md={9} sm={12}>
         <h2>{data.product_name}</h2>
@@ -34,30 +34,13 @@ function Orders({data}) {
           PHP {data.new_price}
         </h3>
       </Col>
-    </>
+    </Row>
   )
 }
 
 function Page({params}) {
   const [randShipFee, setRandShipFee] = useState(0);
   const [items, setItems] = useState([]);
-  const [user, setUser] = useState({})
-
-  async function updateItems() {
-    const user_data = await getDocument('user-test', params.id)
-    const cart_ref_array = user_data?.cart
-
-    let checkout_items = []
-
-    for (let i = 0; i < cart_ref_array?.length; i++) {
-      checkout_items.push((await getDocumentFromRef(cart_ref_array[i])).data())
-    }
-
-    console.log(user_data);
-
-    setUser(user_data)
-    setItems(checkout_items)
-  }
 
   function objectSum(obj, key) {
     let arr = []
@@ -71,15 +54,15 @@ function Page({params}) {
   }
 
   useEffect(() => {
-    updateItems()    
-    JSON.parse(localStorage.getItem('query'))
+    setItems(JSON.parse(localStorage.getItem('query')))
+    setRandShipFee(Math.floor((Math.random() * 500) + 50))
   }, [])
 
   return (
     <main>
       <Container className='px-5 mb-5'>
         <div className='lh-1'>
-          <h1 className='m-0'>Hi {user?.lname}</h1>
+          <h1 className='m-0'>Hi user</h1>
           <h3 className='m-0'>Thank you for your order!</h3>
         </div>
         <h3 className='mt-5'>
@@ -96,7 +79,7 @@ function Page({params}) {
         <Row className='my-5'>
           <Col md={6} sm={12}>
             <h5 className='m-0'>Delivery Address</h5>
-            <p className='m-0'>{user?.lname}</p>
+            <p className='m-0'>user</p>
             <p className='m-0'>211 Aurora blvd., Quezon City</p>
             <p className='m-0'>09070617465</p>
           </Col>
@@ -107,11 +90,9 @@ function Page({params}) {
         </Row>
         <hr />
         <h5>Order Details</h5>
-        <Row>
-          {
-            items.map(data => <Orders data={data}/>)
-          }
-        </Row>
+        {
+          items.map(data => <Orders data={data}/>)
+        }
         <hr />
         <div className='d-flex justify-content-end mb-5'>
           <div style={{ width: 300 }}>
