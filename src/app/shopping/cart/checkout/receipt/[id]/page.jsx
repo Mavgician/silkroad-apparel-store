@@ -1,21 +1,89 @@
 'use client'
 
+import { getDocument, getDocumentFromRef } from '@/app/scripts/database-functions';
+import { useEffect, useState } from 'react';
 import {
   Container,
   Row,
   Col
 } from 'reactstrap'
 
-function Page() {
+function Orders({data}) {
+  return (
+    <>
+      <Col md={3} sm={12}>
+        <img src={data.images[0]} alt="" />
+      </Col>
+      <Col md={9} sm={12}>
+        <h2>{data.product_name}</h2>
+        <Row>
+          <Col md={1} sm={12}>
+            <h5 className='m-0'>Type</h5>
+            <p className='m-0'>{data.extra_details.category.type}</p>
+          </Col>
+          <Col md={1} sm={12}>
+            <h5 className='m-0'>Group</h5>
+            <p className='m-0'>{data.extra_details.category.group}</p>
+          </Col>
+          <Col md={1} sm={12}>
+            <h5 className='m-0'>Quantity</h5>
+            <p className='m-0'>1</p>
+          </Col>
+        </Row>
+        <h3 className='text-danger my-3'>
+          PHP {data.new_price}
+        </h3>
+      </Col>
+    </>
+  )
+}
+
+function Page({params}) {
+  const [randShipFee, setRandShipFee] = useState(0);
+  const [items, setItems] = useState([]);
+  const [user, setUser] = useState({})
+
+  async function updateItems() {
+    const user_data = await getDocument('user-test', params.id)
+    const cart_ref_array = user_data?.cart
+
+    let checkout_items = []
+
+    for (let i = 0; i < cart_ref_array?.length; i++) {
+      checkout_items.push((await getDocumentFromRef(cart_ref_array[i])).data())
+    }
+
+    console.log(user_data);
+
+    setUser(user_data)
+    setItems(checkout_items)
+  }
+
+  function objectSum(obj, key) {
+    let arr = []
+    
+    obj.forEach(element => {
+      arr.push(element[key])
+    });
+
+    if (arr.length > 0) return arr.reduce((accumulator, currentValue) => parseFloat(accumulator) + parseFloat(currentValue))
+    else return 0
+  }
+
+  useEffect(() => {
+    updateItems()    
+    JSON.parse(localStorage.getItem('query'))
+  }, [])
+
   return (
     <main>
       <Container className='px-5 mb-5'>
         <div className='lh-1'>
-          <h1 className='m-0'>Hi John</h1>
+          <h1 className='m-0'>Hi {user?.lname}</h1>
           <h3 className='m-0'>Thank you for your order!</h3>
         </div>
         <h3 className='mt-5'>
-          DATE OF ORDER: 12-01-23
+          DATE OF ORDER: 12-02-23
         </h3>
         <div>
           <p className='m-0'>Order number: 1220088882104021257-0234169</p>
@@ -28,7 +96,7 @@ function Page() {
         <Row className='my-5'>
           <Col md={6} sm={12}>
             <h5 className='m-0'>Delivery Address</h5>
-            <p className='m-0'>John Doe</p>
+            <p className='m-0'>{user?.lname}</p>
             <p className='m-0'>211 Aurora blvd., Quezon City</p>
             <p className='m-0'>09070617465</p>
           </Col>
@@ -40,53 +108,35 @@ function Page() {
         <hr />
         <h5>Order Details</h5>
         <Row>
-          <Col md={3} sm={12}>
-            <img src="https://image.uniqlo.com/UQ/ST3/ph/imagesgoods/455471/item/phgoods_32_455471.jpg?width=250" alt="" />
-          </Col>
-          <Col md={9} sm={12}>
-            <h2>Ultra Stretch Jeans</h2>
-            <Row>
-              <Col md={1} sm={12}>
-                <h5 className='m-0'>Color</h5>
-                <p className='m-0'>Beige</p>
-              </Col>
-              <Col md={1} sm={12}>
-                <h5 className='m-0'>Size</h5>
-                <p className='m-0'>Medium</p>
-              </Col>
-              <Col md={1} sm={12}>
-                <h5 className='m-0'>Quantity</h5>
-                <p className='m-0'>1</p>
-              </Col>
-            </Row>
-            <h3 className='text-danger my-3'>
-              PHP 1499.00
-            </h3>
-          </Col>
+          {
+            items.map(data => <Orders data={data}/>)
+          }
         </Row>
         <hr />
-        <div className='float-end' style={{width: 300}}>
-          <Row>
-            <Col>
-              <p className='m-0'>Subtotal</p>
-              <p className='m-0'>VAT included</p>
-              <p className='m-0'>Shipping Fee</p>
-            </Col>
-            <Col className='fw-bold'>
-              <p className='m-0'>PHP 1499.00</p>
-              <p className='m-0'>PHP 149.00</p>
-              <p className='m-0'>0.0</p>
-            </Col>
-          </Row>
-          <hr />
-          <Row>
-            <Col>
-              <p className='m-0'>Order Total</p>
-            </Col>
-            <Col className='fw-bold'>
-              <p className='m-0 fs-4'>PHP 1499.00</p>
-            </Col>
-          </Row>
+        <div className='d-flex justify-content-end mb-5'>
+          <div style={{ width: 300 }}>
+            <Row>
+              <Col>
+                <p className='m-0'>Subtotal</p>
+                <p className='m-0'>VAT included</p>
+                <p className='m-0'>Shipping Fee</p>
+              </Col>
+              <Col className='fw-bold'>
+                <p className='m-0'>PHP {objectSum(items, 'new_price')}</p>
+                <p className='m-0'>PHP 0</p>
+                <p className='m-0'>PHP {randShipFee}</p>
+              </Col>
+            </Row>
+            <hr />
+            <Row>
+              <Col>
+                <p className='m-0'>Order Total</p>
+              </Col>
+              <Col className='fw-bold'>
+                <p className='m-0 fs-4'>PHP {objectSum(items, 'new_price') + randShipFee}</p>
+              </Col>
+            </Row>
+          </div>
         </div>
       </Container>
     </main>

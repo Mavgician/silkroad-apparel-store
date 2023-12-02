@@ -1,6 +1,6 @@
 'use client'
 
-import { getDocument, getDocumentFromRef, editDocument } from '@/app/scripts/database-functions'
+import { getDocument, getDocumentFromRef, editDocument, getRandomId } from '@/app/scripts/database-functions'
 import {
   Container,
   Card,
@@ -68,6 +68,7 @@ function Page({ params }) {
   const [confirm, setConfirm] = useState(false);
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState([])
+  const [query, setQuery] = useState({});
 
   const [randShipFee, setRandShipFee] = useState(0);
 
@@ -129,6 +130,8 @@ function Page({ params }) {
   useEffect(() => {
     if (checkoutIndexList.length > 0) setRandShipFee(Math.floor((Math.random() * 500) + 50))
     else setRandShipFee(0)
+
+    localStorage.setItem('query', JSON.stringify(filterChecklist(items, checkoutIndexList)))
   }, [checkoutIndexList]);
 
   useEffect(() => {
@@ -189,7 +192,7 @@ function Page({ params }) {
                   type="button"
                   className="btn btn-success btn-lg my-3 w-100"
                   onClick={() => {
-                    router.push(`/receipt/${params.id}`)
+                    router.push(`checkout/receipt/${getRandomId()}`)
                   }}
                 >
                   Proceed to checkout

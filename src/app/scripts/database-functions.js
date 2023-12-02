@@ -16,6 +16,18 @@ import {
   FieldPath
 } from 'firebase/firestore'
 
+function getRefFromId(collectionRef, id) {
+  return doc(collection(db, collectionRef), String(id))
+}
+
+function getCurrentUser() {
+  return auth.currentUser
+}
+
+function getRandomId() {
+  return doc(collection(db, 'dev')).id
+}
+
 async function getCollection(collectionRef) {
   /* await new Promise(resolve => setTimeout(resolve, 1000)) */
 
@@ -65,14 +77,6 @@ async function getDocumentFromRef(ref) {
   return await getDoc(ref)
 }
 
-function getRefFromId(collectionRef, id) {
-  return doc(collection(db, collectionRef), String(id))
-}
-
-function getCurrentUser() {
-  return auth.currentUser
-}
-
 async function editDocument(collectionRef, data, id) {
   return await setDoc(doc(collection(db, collectionRef), String(id)), data)
 }
@@ -87,4 +91,4 @@ async function deleteDocument(collectionRef, id) {
   return await deleteDoc(doc(collection(db, collectionRef), String(id)))
 }
 
-export { getCollection, getCollectionFiltered, getDocument, getCurrentUser, getDocumentFromRef, getRefFromId, editDocument, deleteDocument, docExists }
+export { getCollection, getCollectionFiltered, getDocument, getCurrentUser, getDocumentFromRef, getRefFromId, editDocument, deleteDocument, docExists, getRandomId }
