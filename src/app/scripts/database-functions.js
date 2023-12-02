@@ -57,8 +57,8 @@ async function getCollectionFiltered(collectionRef, filter, search_limit = 5, ty
 async function getDocument(collectionRef, id) {
   /* await new Promise(resolve => setTimeout(resolve, 1000)) */
 
-  let document = await getDoc(doc(collection(db, collectionRef), id));
-  let data = document.data();
+  let snapshot = await getDoc(doc(collection(db, collectionRef), id));
+  let data = snapshot.data();
 
   return data
 }
@@ -79,8 +79,14 @@ async function editDocument(collectionRef, data, id) {
   return await setDoc(doc(collection(db, collectionRef), String(id)), data)
 }
 
+async function docExists(collectionRef, id) {
+  let snapshot = await getDoc(doc(collection(db, collectionRef), id));
+
+  return snapshot.exists()
+}
+
 async function deleteDocument(collectionRef, id) {
   return await deleteDoc(doc(collection(db, collectionRef), String(id)))
 }
 
-export { getCollection, getCollectionFiltered, getDocument, getCurrentUser, getDocumentFromRef, getRefFromId, editDocument, deleteDocument }
+export { getCollection, getCollectionFiltered, getDocument, getCurrentUser, getDocumentFromRef, getRefFromId, editDocument, deleteDocument, docExists }

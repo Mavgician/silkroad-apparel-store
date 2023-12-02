@@ -1,4 +1,6 @@
-import { getDocument, getDocumentFromRef } from '@/app/scripts/database-functions'
+'use client'
+
+import { getDocument, getDocumentFromRef, getCurrentUser } from '@/app/scripts/database-functions'
 import {
   Container,
   Card,
@@ -10,18 +12,35 @@ import {
 
 import { CartItem } from '@/app/components/Cart.jsx'
 
+import { useEffect, useState } from "react";
+
+import { useRouter, usePathname } from 'next/navigation';
+
 async function Page() {
-  let user_data = await getDocument('user-test', 'lMfw8uvoq8qR9XaWTKat')
+  const router = useRouter()
+  const currentPath = usePathname()
 
-  let cart_cards = []
+  let [cards, setCards] = useState([])
 
-  for (let i = 0; i < user_data.cart.length; i++) {
-    let details = (await getDocumentFromRef(user_data.cart[i])).data()
+  async function updateUserData() {
+    let userData = await getDocument('user-test', getCurrentUser().uid)
+    let cart_cards = []
 
-    cart_cards.push(
-      <CartItem data={details} itemIndex={i} user_id={user_data.id} />
-    )
+    for (let i = 0; i < userData.cart.length; i++) {
+      let details = (await getDocumentFromRef(userData.cart[i])).data()
+  
+      cart_cards.push(
+        <CartItem data={details} itemIndex={i} user_id={userData.id} deleteCallback={updateUserData}/>
+      )
+    }
+
+    setCards(cart_cards)
   }
+
+  useEffect(() => {
+    if (!getCurrentUser()) return router.push('/login')
+    else updateUserData()
+  }, []);
 
   return (
     <main>
@@ -29,13 +48,13 @@ async function Page() {
         <Row>
           <Col md={9} sm={12}>
             <h1>Shopping Cart</h1>
-            {/* {[cart_cards]} */}
+            {[cards]}
           </Col>
           <Col md={3} sm={12} className='position-relative'>
             <div>
               <Card>
                 <CardBody>
-                  <h4>Order Summary <small className='text-muted fw-normal'>| 0 item(s)</small></h4>
+                  <h4>Order Summary <small className='text-muted fw-normal'>| {cards.length} item(s)</small></h4>
                   <div>
                     <p className='my-2'>Item(s) Subtotal:</p>
                     <p className='my-2'>Shipping fee:</p>
@@ -46,6 +65,9 @@ async function Page() {
               <button
                 type="button"
                 className="btn btn-success btn-lg my-3 w-100"
+                onClick={() => {
+                  router.push(`${currentPath}/receipt`)
+                }}
               >
                 Proceed to checkout
               </button>

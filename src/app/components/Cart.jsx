@@ -12,7 +12,7 @@ import {
 } from 'reactstrap'
 import { deleteDocument, editDocument, getDocument, getRefFromId } from '../scripts/database-functions'
 
-function CartItem({ data, itemIndex, user_id }) {
+function CartItem({ data, itemIndex, user_id, deleteCallback }) {
   return (
     <Card className='mb-3'>
       <CardHeader className='fw-bold text-muted'>
@@ -53,7 +53,7 @@ function CartItem({ data, itemIndex, user_id }) {
           </Col>
           <Col md={2} sm={12}>
             Item subtotal
-            <p className='fw-bold fs-3'>PHP {data.new_price}</p>
+            <p className='fw-bold fs-4'>PHP {data.new_price}</p>
           </Col>
           <Col md={2} sm={12} className='d-flex align-items-center'>
             <dir>
@@ -64,11 +64,8 @@ function CartItem({ data, itemIndex, user_id }) {
                   let user_data = await getDocument('user-test', user_id)
                   let user_cart_copy = user_data.cart
 
-                  user_cart_copy.splice(itemIndex, itemIndex)
-
+                  user_cart_copy.splice(itemIndex, 1)
                   user_data.cart = user_cart_copy
-
-                  console.log(user_cart_copy);
 
                   editDocument('user-test', user_data, user_id)
                 }}

@@ -276,14 +276,15 @@ function ProductBody({ children }) {
 
 function ProductControls({ id }) {
   const router = useRouter()
-  const user = getCurrentUser()
   const ref = getRefFromId('product-test', id)
 
   async function addToCart() {
-    if (!user) return router.push('/login')
+    if (!getCurrentUser()) return router.push('/login')
 
-    let data = await getDocument('user-test', user.uid)
+    let data = await getDocument('user-test', getCurrentUser().uid)
     let cart = []
+
+    console.log(data)
 
     if (data.cart === undefined) {
       data.cart = cart
@@ -293,11 +294,11 @@ function ProductControls({ id }) {
 
     data.cart.push(ref)
 
-    setDoc(doc(collection(db, 'user-test'), user.uid), data)
+    setDoc(doc(collection(db, 'user-test'), getCurrentUser().uid), data)
   }
 
   function buy() {
-    if (!user) return router.push('/login')
+    if (!getCurrentUser()) return router.push('/login')
     
   }
 

@@ -29,12 +29,12 @@ function Login() {
   const router = useRouter()
 
   async function GoogleAuth() {
-    const user = await GoogleSign_in();
+    await GoogleSign_in();
     router.back()
   }
 
   async function FacebookAuth() {
-    const user = await FacebookSign_in();
+    await FacebookSign_in();
     router.back()
   }
 
