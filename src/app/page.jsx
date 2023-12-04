@@ -68,7 +68,7 @@ function Home() {
         activeIndex={activeIndex}
         next={next}
         previous={previous}
-        interval={false}
+        interval={3500}
         className='home-background'
       >
         {slides}
