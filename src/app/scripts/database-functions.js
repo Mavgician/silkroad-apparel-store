@@ -29,8 +29,6 @@ function getRandomId() {
 }
 
 async function getCollection(collectionRef) {
-  /* await new Promise(resolve => setTimeout(resolve, 1000)) */
-
   const querySnap = await getDocs(query(collection(db, collectionRef), orderBy('id')))
   let data = []
 
@@ -42,8 +40,6 @@ async function getCollection(collectionRef) {
 }
 
 async function getCollectionFiltered(collectionRef, filter, search_limit = 5, type = 'type') {
-  /* await new Promise(resolve => setTimeout(resolve, 1000)) */
-
   const querySnap = await getDocs(
     query(
       collection(db, collectionRef),
@@ -67,7 +63,6 @@ async function getCollectionFiltered(collectionRef, filter, search_limit = 5, ty
 }
 
 async function getDocument(collectionRef, id) {
-  /* await new Promise(resolve => setTimeout(resolve, 1000)) */
   let snapshot = await getDoc(doc(collection(db, collectionRef), id));
 
   return snapshot.data()
@@ -91,4 +86,15 @@ async function deleteDocument(collectionRef, id) {
   return await deleteDoc(doc(collection(db, collectionRef), String(id)))
 }
 
-export { getCollection, getCollectionFiltered, getDocument, getCurrentUser, getDocumentFromRef, getRefFromId, editDocument, deleteDocument, docExists, getRandomId }
+export {
+  getCollection,
+  getCollectionFiltered,
+  getDocument,
+  getCurrentUser,
+  getDocumentFromRef,
+  getRefFromId,
+  editDocument,
+  deleteDocument,
+  docExists,
+  getRandomId
+}

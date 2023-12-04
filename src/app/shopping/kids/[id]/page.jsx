@@ -13,6 +13,15 @@ import {
 
 import { getDocument, getCollectionFiltered } from '@/app/scripts/database-functions'
 
+export async function generateStaticParams() {
+  const collection = await getCollectionFiltered('product-test', 'kids', 20, 'group');
+  let product_ids = []
+
+  collection.forEach(data => product_ids.push({id: data.id}))
+
+  return product_ids
+}
+
 async function Page({ params }) {
   let data = await getDocument('product-test', params.id);
   let suggested_data = await getCollectionFiltered('product-test', data.extra_details.category.type);

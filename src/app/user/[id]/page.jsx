@@ -1,28 +1,40 @@
 'use client'
 
-function Page() {
+import { getDocument } from '@/app/scripts/database-functions'
+import {
+  Container,
+  Button
+} from 'reactstrap'
+import { useSignOut } from 'react-firebase-hooks/auth'
+import { auth } from '@/app/scripts/firebase';
+
+import { useRouter } from 'next/navigation';
+
+async function Page({ params }) {
+  const router = useRouter()
+  const [signOut, loading, error] = useSignOut(auth);
+  const user = await getDocument('user-test', params.id)
+  
+
+  function handleLogout() {
+    signOut()
+    router.push('/')
+  }
+
   return (
     <main>
-      {
-      /*
-        Lagay niyo dito pinaka layout ng home page for the store. Naka integrate ung bootstrap dito so all goods tayo dun.
-        Ang hindi lang nakaintegrate sa root component is ung javascript ng bootstrap. So kung mag ca1ousel or something,
-        sabihan niyo ko, kasi medj mahirap iexplain kung paano i allow un - 
-
-        Small explanation:
-          Next.js is mostly server-side rendered, ang pag import ng javascript is not "server" friendly. Need nating i-convert
-          yung component into a client component para maimport ung javascript. This is actually better para forced tayo gumawa
-          ng components for various things on a page. Slideshow component na lalagyan lang ng picture array etc. etc.
-        
-        Watch niyo rin ung sinend ko sa GC natin para mafamiliarize kayo sa framework. I suggest video number 3 para magets niyo
-        ung routing ng pages. Kung paano siya nahahandle ng server ni next.js.
-
-        PAMPADALI TO NG BUHAY NATIN OKAY >:(
-
-        -Mavs ang leader ng bayan
-      */
-      }
-      <h1>You have reached the template page!</h1>
+      <Container>
+        <h1>
+          Hello { user.fname }
+        </h1>
+        <p>
+          You have reached the user page.
+        </p>
+        <h3>Current Actions:</h3>
+        <Button color='danger' onClick={handleLogout}>
+          Logout
+        </Button>
+      </Container>      
     </main>
   )
 }

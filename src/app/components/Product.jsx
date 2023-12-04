@@ -34,6 +34,9 @@ import { collection, doc, setDoc } from 'firebase/firestore'
 import { auth, db } from '@/app/scripts/firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 /* Product Listing Layouts */
 
 function ProductCardCategoryCollection({ children, className }) {
@@ -81,7 +84,7 @@ function ProductCardCategoryCollection({ children, className }) {
 function ProductCardCollection({ children, className }) {
   try {
     const products = children[0].map(
-      element => {
+      (element, idx) => {
         return <Col md={6} lg={4} xl={3}>{element}</Col>
       }
     )
@@ -97,7 +100,7 @@ function ProductCardCollection({ children, className }) {
   } catch (error) {
     if (children.length > 1) {
       const products = children.map(
-        element => {
+        (element, idx) => {
           return <Col md={6} lg={4} xl={3}>{element}</Col>
         }
       )
@@ -239,16 +242,16 @@ function ProductCardCategory({ title, imagesrc, path }) {
 
 /* Product Page Components */
 
-function ProductContainer({ children }) {
+function ProductContainer({ children, className }) {
   if (children.length > 1) return (
     <Container className='my-5'>
       <Row>
-        {children.map((child, idx, arr) => <Col sm={12} md={(12 / arr.length)}>{child}</Col>)}
+        {children.map((child, idx, arr) => <Col sm={12} md={(12 / arr.length)} key={idx}>{child}</Col>)}
       </Row>
     </Container>
   )
   else return (
-    <Container className='my-5'>
+    <Container className={`my-5 ${className}`}>
       <Row>
         {<Col sm={12} md={12}>{children}</Col>}
       </Row>
@@ -279,13 +282,13 @@ function ProductControls({ id }) {
 
   const ref = getRefFromId('product-test', id)
   const router = useRouter()
-  
+
   async function addToCart() {
     if (!user) return router.push('/login')
-    
+
     let data = await getDocument('user-test', user.uid)
 
-    if (data.cart === undefined) {data.cart = []}
+    if (data.cart === undefined) { data.cart = [] }
     if (!data.cart.some(e => e.id === ref.id)) {
       data.cart.push(ref)
       setDoc(doc(collection(db, 'user-test'), user.uid), data)
@@ -334,12 +337,12 @@ function ProductRating({ rating = 0, popularity = 0 }) {
 
   for (let i = 0; i < 5; i++) {
     if (!Number.isInteger(rating)) {
-      if (i < Math.ceil(rating) - 1) stars.push(<FontAwesomeIcon icon={faStar} />)
-      else if (i < Math.ceil(rating)) stars.push(<FontAwesomeIcon icon={faStarHalfStroke} />)
-      else stars.push(<FontAwesomeIcon icon={faStarStroke} />)
+      if (i < Math.ceil(rating) - 1) stars.push(<FontAwesomeIcon key={`${i}-${rating}-${popularity}`} icon={faStar} />)
+      else if (i < Math.ceil(rating)) stars.push(<FontAwesomeIcon key={`${i}-${rating}-${popularity}`} icon={faStarHalfStroke} />)
+      else stars.push(<FontAwesomeIcon key={`${i}-${rating}-${popularity}`} icon={faStarStroke} />)
     } else {
-      if (i < rating) stars.push(<FontAwesomeIcon icon={faStar} />)
-      else stars.push(<FontAwesomeIcon icon={faStarStroke} />)
+      if (i < rating) stars.push(<FontAwesomeIcon key={`${i}-${rating}-${popularity}`} icon={faStar} />)
+      else stars.push(<FontAwesomeIcon key={`${i}-${rating}-${popularity}`} icon={faStarStroke} />)
     }
   }
 
@@ -381,9 +384,10 @@ function ProductGallery({ images }) {
     <CarouselItem
       onExiting={() => setAnimating(true)}
       onExited={() => setAnimating(false)}
+      key={images[idx]}
     >
       <div className='box-aspect'>
-        <InnerImageZoom src={src} zoomScale={5} zoomType='hover' width='100%' />
+        <InnerImageZoom src={src} zoomScale={5} zoomType='hover' className='w-100' />
       </div>
     </CarouselItem>)
 
@@ -423,6 +427,33 @@ function ProductGallery({ images }) {
   )
 }
 
+function ProductLoading() {
+  return (
+    <>
+      <ProductContainer>
+        <div>
+          <Skeleton height={500} />
+        </div>
+        <div className='position-relative h-100'>
+          <Skeleton height={50} />
+          <Skeleton height={50} className='my-3 w-50' />
+          <Skeleton count={10} />
+          <Skeleton className='w-50 position-absolute bottom-0 start-0' height={50} />
+        </div>
+      </ProductContainer>
+      <div>
+        <center className='mb-5'><Skeleton width={200} height={52} /></center>
+        <ProductCardCollection className='mb-5'>
+          <Skeleton height={400} />
+          <Skeleton height={400} />
+          <Skeleton height={400} />
+          <Skeleton height={400} />
+        </ProductCardCollection>
+      </div>
+    </>
+  )
+}
+
 export {
   ProductCard,
   ProductCardCollection,
@@ -439,5 +470,6 @@ export {
   ProductBannerAlt,
   ProductCardCart,
   ProductCardCategory,
-  ProductComingSoonContainer
+  ProductComingSoonContainer,
+  ProductLoading
 }

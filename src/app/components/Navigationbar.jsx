@@ -46,12 +46,12 @@ function Navigationbar() {
         </Nav>
         <Nav className='ms-auto' navbar>
           <NavItem className='mx-3'>
-            <NavLink href={`/shopping/cart/${user?.uid}`}>
+            <NavLink href={user ? `/shopping/cart/${user?.uid}` : '/login'}>
               <FontAwesomeIcon icon={faCartShopping} className='fa-lg' />
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink href='#'>
+            <NavLink href={user ? `/user/${user?.uid}` : '/login'}>
               <FontAwesomeIcon icon={faUser} className='fa-lg' />
             </NavLink>
           </NavItem>
