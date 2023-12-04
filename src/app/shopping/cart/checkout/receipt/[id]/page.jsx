@@ -1,12 +1,13 @@
-'use client'
-
 import { getDocument, getDocumentFromRef } from '@/app/scripts/database-functions';
-import { useEffect, useState } from 'react';
+import { Timestamp } from 'firebase/firestore';
+
 import {
   Container,
   Row,
   Col
 } from 'reactstrap'
+
+import Link from 'next/link';
 
 function Orders({data}) {
   return (
@@ -38,9 +39,15 @@ function Orders({data}) {
   )
 }
 
-function Page({params}) {
-  const [randShipFee, setRandShipFee] = useState(0);
-  const [items, setItems] = useState([]);
+async function Page({params}) {
+  let order_details = await getDocument('order-receipt-test', params.id)
+  let user_details = await getDocument('user-test', order_details.buyer_id)
+  let cart_details = []
+
+  for (let i = 0; i < order_details.items.length; i++) {
+    let data = await getDocumentFromRef(order_details.items[i].reference);
+    cart_details.push(await data.data());
+  }
 
   function objectSum(obj, key) {
     let arr = []
@@ -53,23 +60,23 @@ function Page({params}) {
     else return 0
   }
 
-  useEffect(() => {
-    setItems(JSON.parse(localStorage.getItem('query')))
-    setRandShipFee(Math.floor((Math.random() * 500) + 50))
-  }, [])
-
   return (
-    <main>
-      <Container className='px-5 mb-5'>
+    <main className='p-0 py-5 position-relative'>
+      <div className="position-fixed top-0 left-0 p-4">
+        <Link href='/' className='text-decoration-none btn btn-secondary btn-lg'>
+          Go back shopping
+        </Link>
+      </div>
+      <Container className='px-5'>
         <div className='lh-1'>
-          <h1 className='m-0'>Hi user</h1>
+          <h1 className='m-0'>Hi {user_details.fname}</h1>
           <h3 className='m-0'>Thank you for your order!</h3>
         </div>
         <h3 className='mt-5'>
-          DATE OF ORDER: 12-02-23
+          DATE OF ORDER: {new Timestamp(order_details.date.seconds, order_details.date.nanoseconds).toDate().toString()}
         </h3>
         <div>
-          <p className='m-0'>Order number: 1220088882104021257-0234169</p>
+          <p className='m-0'>Order ID: {order_details.id}</p>
           <p className='m-0'>Order class: Online store</p>
           <p className='m-0'>Order status: On the way</p>
           <p className='m-0'>Delivery by: Airfreight 2100 Inc.</p>
@@ -89,9 +96,9 @@ function Page({params}) {
           </Col>
         </Row>
         <hr />
-        <h5>Order Details</h5>
+        <h5>Order Details <span className='text-muted'>({order_details.items.length})</span></h5>
         {
-          items.map(data => <Orders data={data}/>)
+          cart_details.map(data => <Orders data={data}/>)
         }
         <hr />
         <div className='d-flex justify-content-end mb-5'>
@@ -103,9 +110,9 @@ function Page({params}) {
                 <p className='m-0'>Shipping Fee</p>
               </Col>
               <Col className='fw-bold'>
-                <p className='m-0'>PHP {objectSum(items, 'new_price')}</p>
+                <p className='m-0'>PHP {objectSum(order_details.items, 'cost')}</p>
                 <p className='m-0'>PHP 0</p>
-                <p className='m-0'>PHP {randShipFee}</p>
+                <p className='m-0'>PHP {order_details.shipping_fee}</p>
               </Col>
             </Row>
             <hr />
@@ -114,7 +121,7 @@ function Page({params}) {
                 <p className='m-0'>Order Total</p>
               </Col>
               <Col className='fw-bold'>
-                <p className='m-0 fs-4'>PHP {objectSum(items, 'new_price') + randShipFee}</p>
+                <p className='m-0 fs-4'>PHP {objectSum(order_details.items, 'cost') + order_details.shipping_fee}</p>
               </Col>
             </Row>
           </div>

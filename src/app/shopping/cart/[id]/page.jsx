@@ -20,6 +20,9 @@ import { CartItem } from '@/app/components/Cart.jsx'
 import { useRouter, usePathname } from 'next/navigation';
 
 import { useEffect, useState } from 'react'
+import { auth } from '@/app/scripts/firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { serverTimestamp } from 'firebase/firestore'
 
 function ConfirmationModal({
   submitCallback,
@@ -63,16 +66,15 @@ function ConfirmationModal({
 }
 
 function Page({ params }) {
-  const [checkoutIndexList, setCheckoutIndexList] = useState([]);
-  const [currentModal, setCurrentModal] = useState({});
-  const [confirm, setConfirm] = useState(false);
+  const [user, loading_auth, error] = useAuthState(auth)
+  const [checkoutIndexList, setCheckoutIndexList] = useState([])
+  const [currentModal, setCurrentModal] = useState({})
+  const [confirm, setConfirm] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [items, setItems] = useState([])
-  const [query, setQuery] = useState({});
+  const [items, setItems] = useState([])  
 
   const [randShipFee, setRandShipFee] = useState(0);
 
-  const currentPath = usePathname()
   const router = useRouter()
 
   async function removeItem(id, index) {
@@ -87,8 +89,8 @@ function Page({ params }) {
   }
 
   async function updateItems() {
-    setLoading(true)
-    const user_data = await getDocument('user-test', params.id)
+    setLoading(true);
+    const user_data = await getDocument('user-test', user?.uid)
     const cart_ref_array = user_data?.cart
 
     let cart_array = []
@@ -98,7 +100,8 @@ function Page({ params }) {
     }
 
     setItems(cart_array)
-    setLoading(false)
+    
+    setLoading(false);
   }
 
   function objectSum(obj, key) {
@@ -127,18 +130,43 @@ function Page({ params }) {
     })
   }
 
+  async function checkoutHandler() {
+    const user_data = await getDocument('user-test', user?.uid)
+    const cart_ref_array = user_data?.cart
+  
+    let cart_ref_checkout_array = []
+
+    checkoutIndexList.forEach(index => cart_ref_checkout_array.push(
+      {
+        cost: parseInt(items[index].new_price),
+        id: items[index].id,
+        reference: cart_ref_array[index]
+      }
+    ))
+        
+    let receipt_id = getRandomId()
+
+    await editDocument('order-receipt-test', {
+      buyer_id: user.uid,
+      date: serverTimestamp(),
+      id: receipt_id,
+      items: cart_ref_checkout_array,
+      shipping_fee: randShipFee
+    }, receipt_id)
+
+    router.push(`checkout/receipt/${receipt_id}`)
+  }
+
   useEffect(() => {
     if (checkoutIndexList.length > 0) setRandShipFee(Math.floor((Math.random() * 500) + 50))
     else setRandShipFee(0)
-
-    localStorage.setItem('query', JSON.stringify(filterChecklist(items, checkoutIndexList)))
   }, [checkoutIndexList]);
 
   useEffect(() => {
-    updateItems()
-  }, []);
+    if (!loading_auth) updateItems()
+  }, [loading_auth]);
 
-  if (loading) {
+  if (loading || loading_auth) {
     return (
       <main className="d-flex justify-content-center align-items-center">
         <h1>Getting your hot items!</h1>
@@ -191,9 +219,7 @@ function Page({ params }) {
                 <button
                   type="button"
                   className="btn btn-success btn-lg my-3 w-100"
-                  onClick={() => {
-                    router.push(`checkout/receipt/${getRandomId()}`)
-                  }}
+                  onClick={checkoutHandler}
                 >
                   Proceed to checkout
                 </button>
