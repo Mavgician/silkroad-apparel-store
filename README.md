@@ -26,26 +26,35 @@ After integrating Firebase into our project, some of the functions will currentl
 
 ### Steps
 
-1. Go to https://console.firebase.google.com/u/1/project/silkroad-apparel/
-2. Find the gear icon on the top left.
-3. Go to project settings and then scroll down.
-4. You should see SDK Setup and configuration. (Make sure it's in npm)
-5. Copy everything inside the code box right after `npm install firebase`
-6. Make a new file inside the src\app folder and name it `firebase.js`
-7. Paste what you copied inside the file
-8. Add these lines to what you copied
+1. Make a new file inside the `src\app\scripts` folder and name it `firebase.js`
+2. Copy the code below into the newly created file.
 
 ```bash
 // Import the functions you need from the SDKs you need
-...
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { getFirestore, Timestamp } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-...
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {...};
 
 // Initialize Firebase
-...
+const app = initializeApp(firebaseConfig);
+
 export const db = getFirestore(app);
+export const auth = getAuth(app)
 ```
+
+3. Go to https://console.firebase.google.com/u/1/project/silkroad-apparel/
+4. Find the gear icon on the top left.
+5. Go to project settings and then scroll down.
+6. You should see SDK Setup and configuration, set it to npm.
+7. Copy the content inside `const firebaseConfig` and paste it inside your Firebase config. 
+
 
 After adding these lines to the firebase.js file, you are all set.
 

@@ -8,7 +8,7 @@ import {
   faGooglePlusG,
 } from "@fortawesome/free-brands-svg-icons";
 
-import React from "react";
+import { useSignInWithGoogle, useSignInWithFacebook } from "react-firebase-hooks/auth";
 import {
   Button,
   FormGroup,
@@ -23,19 +23,28 @@ import { useRouter } from "next/navigation";
 
 import logo from '@/app/favicon.ico'
 import styles from '@/app/login.module.css'
+import { auth } from "@/app/scripts/firebase";
 
 function Login() {
   const router = useRouter()
+  const [ signInWithGoogle, user_Google, loading_Google, error_Google ] = useSignInWithGoogle(auth)
+  const [ signInWithFaceboook, user_Facebook, loading_Facebook, error_Facebook ] = useSignInWithFacebook(auth)
   
-
   async function GoogleAuth() {
-    await GoogleSign_in();
-    router.back()
+    signInWithGoogle().then(
+      data => {
+        router.back()
+        console.log(data);
+      }
+    )
   }
 
   async function FacebookAuth() {
-    await FacebookSign_in();
-    router.back()
+    signInWithFaceboook().then(
+      data => {
+        router.back()
+      }
+    )
   }
 
   function backButton() {
