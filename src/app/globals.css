@@ -47,7 +47,7 @@ main {
     filter: brightness(0.5);
 }
 
-.home-screen{
+.home-screen {
     transform: translateX(-50%) translateY(-50%);
     display: flex;
     justify-content: center;
@@ -65,4 +65,25 @@ main {
 .home-screen h1 {
     font-size: 10em;
     line-height: 0.6em;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid;
+} 
+
+.separator:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .25em;
 }

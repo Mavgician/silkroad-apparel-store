@@ -13,7 +13,7 @@ import '@/app/globals.css'
 function RootLayout({ children }) {
   let path = usePathname().split('/')
 
-  if (path.includes('login') || path.includes('receipt')) {
+  if (path.includes('login') || path.includes('receipt') || path.includes('checkout')) {
     return (
       <html lang="en">
         <body>

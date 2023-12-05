@@ -154,7 +154,7 @@ function Page({ params }) {
       shipping_fee: randShipFee
     }, receipt_id)
 
-    router.push(`checkout/receipt/${receipt_id}`)
+    router.push(`/shopping/cart/checkout/${receipt_id}`)
   }
 
   useEffect(() => {
