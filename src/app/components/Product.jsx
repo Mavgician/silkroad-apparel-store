@@ -38,7 +38,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import Image from 'next/image'
+
 
 /* Product Listing Layouts */
 
@@ -135,7 +135,7 @@ function ProductBanner({ className, imagesrc, title }) {
         <div className='h-100 w-100 d-flex align-items-center justify-content-center'>
           <p className='text-uppercase position-relative fw-bolder'>{title}</p>
         </div>
-        <Image className={`${screenSize.height > screenSize.width ? 'h-100' : 'w-100'} top-0 start-0 position-absolute`} src={imagesrc} />
+        <img className={`${screenSize.height > screenSize.width ? 'h-100' : 'w-100'} top-0 start-0 position-absolute`} src={imagesrc} />
       </div>
     </Container>
   )
@@ -150,7 +150,7 @@ function ProductBannerAlt({ className, imagesrc, children }) {
         <div className='h-100 w-100 d-flex align-items-center justify-content-center'>
           {children}
         </div>
-        <Image className={`${screenSize.height > screenSize.width ? 'h-100' : 'w-100'} top-0 start-0 position-absolute`} src={imagesrc} />
+        <img className={`${screenSize.height > screenSize.width ? 'h-100' : 'w-100'} top-0 start-0 position-absolute`} src={imagesrc} />
       </div>
     </Container>
   )
@@ -181,7 +181,7 @@ function ProductCard({ data, fromProductPage }) {
     <div className={`p-1 mb-2 ${styles.product}`}>
       <a href={`${currentPath}/${data.id}`} className='text-decoration-none text-black'>
         <div className="position-relative overflow-hidden d-flex justify-content-center align-items-center" style={{ maxHeight: 300, height: 300 }}>
-          <Image src={data.images[0]} className="w-100" />
+          <img src={data.images[0]} className="w-100" />
         </div>
         <div className='position-relative' style={{ height: 125 }}>
           <div className="mt-3">
@@ -207,7 +207,7 @@ function ProductCardCart({ data }) {
     <div className={`p-1 mb-2 ${styles.product}`}>
       <a href={`${currentPath}/${data.id}`} className='text-decoration-none text-black'>
         <div className="position-relative overflow-hidden d-flex justify-content-center align-items-center" style={{ maxHeight: 300, height: 300 }}>
-          <Image src={data.images[0]} className="w-100" />
+          <img src={data.images[0]} className="w-100" />
         </div>
         <div className='text-center'>
           <p className="mt-4 mb-2 text-muted fw-bold">{data.product_name}</p>
@@ -233,7 +233,7 @@ function ProductCardCategory({ title, imagesrc, path }) {
     <div className={`p-0 mb-2 border ${styles.product}`}>
       <a href={`${currentPath}/${path}`} className='text-decoration-none text-black'>
         <div className="position-relative overflow-hidden d-flex justify-content-center align-items-center" style={{ maxHeight: 300, height: 300 }}>
-          <Image src={imagesrc} className={screenSize.height > screenSize.width ? 'w-100' : 'h-100'} />
+          <img src={imagesrc} className={screenSize.height > screenSize.width ? 'w-100' : 'h-100'} />
         </div>
         <div className='p-3'>
           <p className='text-center fs-4 m-0'>{title}</p>

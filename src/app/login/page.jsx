@@ -121,7 +121,7 @@ function Login() {
         <Col md={6} sm={12} className="bg-black d-flex justify-content-center align-items-center text-white">
           <div>
             <center className="my-4">
-              <Image src={logo.src} className="my-2 w-50" />
+              <img src={logo.src} className="my-2 w-50" />
             </center>
             <h1>Hello, Friend!</h1>
             <p>Start a journey through the Silky Road of Clothes with us!</p>

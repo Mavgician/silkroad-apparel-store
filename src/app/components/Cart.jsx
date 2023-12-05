@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+
 import { useState } from 'react'
 import {
   Card,
@@ -33,7 +33,7 @@ function CartItem({ data, itemIndex, user_id, deleteCallback, checkCallback }) {
             </FormGroup>
           </Col>
           <Col md={2} sm={12} className='d-flex align-items-center'>
-            <Image src={data.images[0]} className='w-50' alt="" />
+            <img src={data.images[0]} className='w-50' alt="" />
           </Col>
           <Col md={4} sm={12}>
             <p className='text-muted text-uppercase lh-1 m-0'>

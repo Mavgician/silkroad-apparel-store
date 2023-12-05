@@ -9,7 +9,7 @@ import {
 
 
 import logo from '@/lib/silk-road-500.png'
-import Image from 'next/image';
+;
 
 const items = [
   {
@@ -58,7 +58,7 @@ function Home() {
         key={item.src}
         className='vh-100 overflow-hidden'
       >
-        <Image src={item.src} alt={item.altText} className='h-100'/>
+        <img src={item.src} alt={item.altText} className='h-100'/>
       </CarouselItem>
     );
   });
@@ -85,7 +85,7 @@ function Home() {
         />
       </Carousel>
       <div className='position-absolute h-50 w-50 top-50 start-50 home-screen'>
-        <Image src={logo.src} alt="" />
+        <img src={logo.src} alt="" />
         <div>
           <h1>Silkroad</h1>
           <h2>The place for all your clothing needs.</h2>
