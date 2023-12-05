@@ -3,7 +3,7 @@
 import styles from '@/app/shopping.module.css'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faStarHalfStroke, faCartShopping } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faStarHalfStroke, faCartShopping, faX } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarStroke } from '@fortawesome/free-regular-svg-icons'
 
 import '@/lib/react-innner-image-zoom.min.css'
@@ -15,7 +15,9 @@ import {
   Input,
   Carousel,
   CarouselItem,
-  CarouselControl
+  CarouselControl,
+  Modal,
+  ModalBody
 } from 'reactstrap'
 
 import { usePathname } from 'next/navigation'
@@ -280,11 +282,16 @@ function ProductBody({ children }) {
 function ProductControls({ id }) {
   const [user, loading, error] = useAuthState(auth);
 
+  const [productName, setProductName] = useState('');
+  const [isModal, setIsModal] = useState(false);
+
   const ref = getRefFromId('product-test', id)
   const router = useRouter()
 
   async function addToCartHandler() {
     let data = await getDocument('user-test', user?.uid)
+
+    setIsModal(true)
 
     if (!data || !user) return router.push('/login')
     if (data.cart == undefined) { data.cart = [] }
@@ -345,6 +352,17 @@ function ProductControls({ id }) {
       >
         Buy Now
       </button>
+      <Modal isOpen={isModal} centered={true} toggle={() => setIsModal(!isModal)}>
+        <ModalBody className='position-relative'>
+          <div className='position-absolute top-0 end-0 p-2 lh-1 text-muted fw-bold' role='button' onClick={() => setIsModal(false)}>
+            <FontAwesomeIcon icon={faX} className='fa-xs'/>
+          </div>
+          <center>
+            <h1 className='text-centered text-break'>{}</h1>
+            <p className='m-0'>Item has been added to cart!</p>
+          </center>
+        </ModalBody>
+      </Modal>
     </>
   )
 }
