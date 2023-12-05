@@ -281,8 +281,6 @@ function ProductBody({ children }) {
 
 function ProductControls({ id }) {
   const [user, loading, error] = useAuthState(auth);
-
-  const [productName, setProductName] = useState('');
   const [isModal, setIsModal] = useState(false);
 
   const ref = getRefFromId('product-test', id)
@@ -324,47 +322,55 @@ function ProductControls({ id }) {
     router.push(`/shopping/cart/checkout/receipt/${receipt_id}`)
   }
 
-  return (
-    <>
-      <Input type="select" className={`${styles['product-page-quantity']} me-2`}>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        <option>7</option>
-        <option>8</option>
-        <option>9</option>
-        <option>10</option>
-      </Input>
-      <button
-        type="button"
-        className="btn btn-primary btn-circle btn-lg btn-circle me-2"
-        onClick={addToCartHandler}
-      >
-        Add to cart <FontAwesomeIcon icon={faCartShopping} />
-      </button>
-      <button
-        type="button"
-        className="btn btn-danger btn-circle btn-lg btn-circle me-2"
-        onClick={buyHandler}
-      >
-        Buy Now
-      </button>
-      <Modal isOpen={isModal} centered={true} toggle={() => setIsModal(!isModal)}>
-        <ModalBody className='position-relative'>
-          <div className='position-absolute top-0 end-0 p-2 lh-1 text-muted fw-bold' role='button' onClick={() => setIsModal(false)}>
-            <FontAwesomeIcon icon={faX} className='fa-xs'/>
-          </div>
-          <center>
-            <h1 className='text-centered text-break'>{}</h1>
-            <p className='m-0'>Item has been added to cart!</p>
-          </center>
-        </ModalBody>
-      </Modal>
-    </>
-  )
+  if (!user) {
+    return (
+      <>
+        <Skeleton height={50} width={400}/>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Input type="select" className={`${styles['product-page-quantity']} me-2`}>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+        </Input>
+        <button
+          type="button"
+          className="btn btn-primary btn-circle btn-lg btn-circle me-2"
+          onClick={addToCartHandler}
+        >
+          Add to cart <FontAwesomeIcon icon={faCartShopping} />
+        </button>
+        <button
+          type="button"
+          className="btn btn-danger btn-circle btn-lg btn-circle me-2"
+          onClick={buyHandler}
+        >
+          Buy Now
+        </button>
+        <Modal isOpen={isModal} centered={true} toggle={() => setIsModal(!isModal)}>
+          <ModalBody className='position-relative'>
+            <div className='position-absolute top-0 end-0 p-2 lh-1 text-muted fw-bold' role='button' onClick={() => setIsModal(false)}>
+              <FontAwesomeIcon icon={faX} className='fa-xs'/>
+            </div>
+            <center>
+              <h1 className='text-centered text-break'>{}</h1>
+              <p className='m-0'>Item has been added to cart!</p>
+            </center>
+          </ModalBody>
+        </Modal>
+      </>
+    )
+  }
 }
 
 function ProductRating({ rating = 0, popularity = 0 }) {
@@ -473,7 +479,7 @@ function ProductLoading() {
           <Skeleton height={50} />
           <Skeleton height={50} className='my-3 w-50' />
           <Skeleton count={10} />
-          <Skeleton className='w-50 position-absolute bottom-0 start-0' height={50} />
+          <Skeleton className='position-absolute bottom-0 start-0' width={400} height={50} />
         </div>
       </ProductContainer>
       <div>
