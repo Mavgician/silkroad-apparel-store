@@ -83,7 +83,7 @@ function CartItem({ data, itemIndex, user_id, deleteCallback, checkCallback }) {
               <a
                 type="button"
                 className="btn btn-info btn-sm my-1 w-100"
-                href={`${data.extra_details.category.group.toLowerCase()}/${data.id}`}
+                href={`/shopping/${data.extra_details.category.group.toLowerCase()}/${data.id}`}
               >
                 Go to page
               </a>
