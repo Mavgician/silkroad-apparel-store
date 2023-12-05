@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image';
 import {
 	useState
 } from 'react'
@@ -23,7 +24,7 @@ function CheckoutItem({ image, name, price }) {
 	return (
 		<div className="d-flex gap-3 mb-3">
 			<div style={{ height: 60, width: 60 }} className="d-flex align-items-center flex-shrink-0">
-				<img src={image} alt="" className="w-100" />
+				<Image src={image} alt="" className="w-100" />
 			</div>
 			<div className="flex-grow-1">
 				<p className='m-0'>{name}</p>

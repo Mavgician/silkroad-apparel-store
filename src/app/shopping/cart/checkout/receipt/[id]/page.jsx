@@ -8,12 +8,13 @@ import {
 } from 'reactstrap'
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 function Orders({data}) {
   return (
     <Row className='mb-3'>
       <Col md={3} sm={12}>
-        <img src={data.images[0]} alt="" className='w-100'/>
+        <Image src={data.images[0]} alt="" className='w-100'/>
       </Col>
       <Col md={9} sm={12}>
         <h2>{data.product_name}</h2>

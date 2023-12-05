@@ -25,6 +25,7 @@ import logo from '@/app/favicon.ico'
 import styles from '@/app/login.module.css'
 import { auth } from "@/app/scripts/firebase";
 import { docExists, editDocument } from "../scripts/database-functions";
+import Image from "next/image";
 
 function Login() {
   const router = useRouter()
@@ -120,7 +121,7 @@ function Login() {
         <Col md={6} sm={12} className="bg-black d-flex justify-content-center align-items-center text-white">
           <div>
             <center className="my-4">
-              <img src={logo.src} className="my-2 w-50" />
+              <Image src={logo.src} className="my-2 w-50" />
             </center>
             <h1>Hello, Friend!</h1>
             <p>Start a journey through the Silky Road of Clothes with us!</p>

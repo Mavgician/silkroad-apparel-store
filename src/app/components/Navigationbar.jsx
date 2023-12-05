@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import logo from '@/app/favicon.ico'
+import Image from 'next/image';
 
 function Navigationbar() {
   const [user, loading, error] = useAuthState(auth);
@@ -28,7 +29,7 @@ function Navigationbar() {
   return (
     <Navbar expand='md' color='dark' dark fixed='top'>
       <NavbarBrand href='/' className='d-flex align-items-center'>
-        <img src={logo.src} width="40" height="40" />
+        <Image src={logo.src} width="40" height="40" />
         <small className='mx-2'><b>Silkroad</b></small>
       </NavbarBrand>
       <NavbarToggler onClick={toggle} />
