@@ -27,10 +27,10 @@ import { useScreenSize } from '@/app/scripts/custom-hooks'
 import InnerImageZoom from 'react-inner-image-zoom';
 import ReadMoreReact from 'read-more-react'
 
-import { getCurrentUser, getDocument, getRefFromId } from '../scripts/database-functions'
+import { getDocument, getRefFromId, getRandomId, editDocument } from '../scripts/database-functions'
 
 import { useRouter } from 'next/navigation'
-import { collection, doc, setDoc } from 'firebase/firestore'
+import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '@/app/scripts/firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
@@ -283,21 +283,38 @@ function ProductControls({ id }) {
   const ref = getRefFromId('product-test', id)
   const router = useRouter()
 
-  async function addToCart() {
-    if (!user) return router.push('/login')
+  async function addToCartHandler() {
+    let data = await getDocument('user-test', user?.uid)
 
-    let data = await getDocument('user-test', user.uid)
-
-    if (data.cart === undefined) { data.cart = [] }
+    if (!data || !user) return router.push('/login')
+    if (data.cart == undefined) { data.cart = [] }
     if (!data.cart.some(e => e.id === ref.id)) {
       data.cart.push(ref)
       setDoc(doc(collection(db, 'user-test'), user.uid), data)
     }
   }
 
-  function buy() {
-    if (!user) return router.push('/login')
-    Sign_Out()
+  async function buyHandler() {
+    let data = await getDocument('user-test', user?.uid)
+
+    if (!data || !user) return router.push('/login')
+
+    let receipt_id = getRandomId()
+    let product_details = await getDocument('product-test', id)
+
+    await editDocument('order-receipt-test', {
+      buyer_id: user.uid,
+      date: serverTimestamp(),
+      id: receipt_id,
+      items: [{
+        cost: product_details.new_price,
+        id: id,
+        reference: ref
+      }],
+      shipping_fee: Math.floor((Math.random() * 500) + 50)
+    }, receipt_id)
+
+    router.push(`/shopping/cart/checkout/receipt/${receipt_id}`)
   }
 
   return (
@@ -317,14 +334,14 @@ function ProductControls({ id }) {
       <button
         type="button"
         className="btn btn-primary btn-circle btn-lg btn-circle me-2"
-        onClick={addToCart}
+        onClick={addToCartHandler}
       >
         Add to cart <FontAwesomeIcon icon={faCartShopping} />
       </button>
       <button
         type="button"
         className="btn btn-danger btn-circle btn-lg btn-circle me-2"
-        onClick={buy}
+        onClick={buyHandler}
       >
         Buy Now
       </button>

@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import logo from '@/app/favicon.ico'
 import styles from '@/app/login.module.css'
 import { auth } from "@/app/scripts/firebase";
+import { docExists, editDocument } from "../scripts/database-functions";
 
 function Login() {
   const router = useRouter()
@@ -31,20 +32,39 @@ function Login() {
   const [ signInWithFaceboook, user_Facebook, loading_Facebook, error_Facebook ] = useSignInWithFacebook(auth)
   
   async function GoogleAuth() {
-    signInWithGoogle().then(
-      data => {
-        router.back()
-        console.log(data);
-      }
-    )
+    const user = (await signInWithGoogle()).user
+
+    if (!await docExists('user-test', user.uid)) {
+      await editDocument('user-test', {
+        cart: [],
+        contact: user.phoneNumber,
+        email: user.email,
+        fname: user.displayName,
+        lname: user.displayName,
+        id: user.uid,
+        role: 'standard-user'
+      }, user.uid)
+    }
+
+    router.back()
   }
 
   async function FacebookAuth() {
-    signInWithFaceboook().then(
-      data => {
-        router.back()
-      }
-    )
+    const user = (await signInWithFaceboook())?.user
+
+    if (!await docExists('user-test', user.uid)) {
+      await editDocument('user-test', {
+        cart: [],
+        contact: user.phoneNumber,
+        email: user.email,
+        fname: user.displayName,
+        lname: user.displayName,
+        id: user.uid,
+        role: 'standard user'
+      }, user.uid)
+    }
+
+    router.back()
   }
 
   function backButton() {
