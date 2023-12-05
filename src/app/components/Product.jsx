@@ -312,14 +312,14 @@ function ProductControls({ id }) {
       date: serverTimestamp(),
       id: receipt_id,
       items: [{
-        cost: product_details.new_price,
+        cost: parseInt(product_details.new_price),
         id: id,
         reference: ref
       }],
       shipping_fee: Math.floor((Math.random() * 500) + 50)
     }, receipt_id)
 
-    router.push(`/shopping/cart/checkout/receipt/${receipt_id}`)
+    router.push(`/shopping/cart/checkout/${receipt_id}`)
   }
 
   if (!user) {
