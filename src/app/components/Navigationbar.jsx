@@ -45,16 +45,23 @@ function Navigationbar() {
           </NavItem>
         </Nav>
         <Nav className='ms-auto' navbar>
-          <NavItem className='mx-3'>
-            <NavLink href={user ? `/shopping/cart/${user?.uid}` : '/login'}>
-              <FontAwesomeIcon icon={faCartShopping} className='fa-lg' />
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href={user ? `/user/${user?.uid}` : '/login'}>
-              <FontAwesomeIcon icon={faUser} className='fa-lg' />
-            </NavLink>
-          </NavItem>
+          {
+            loading ?
+              null
+              :
+              <>
+                <NavItem className='mx-3'>
+                  <NavLink href={user ? `/shopping/cart/${user?.uid}` : '/login'}>
+                    <FontAwesomeIcon icon={faCartShopping} className='fa-lg' />
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink href={user ? `/user/${user?.uid}` : '/login'}>
+                    <FontAwesomeIcon icon={faUser} className='fa-lg' />
+                  </NavLink>
+                </NavItem>
+              </>
+          }
         </Nav>
       </Collapse>
     </Navbar>
